@@ -1,0 +1,37 @@
+Goals:
+- learn modularity and cohesion when writing library code
+- loose coupling between modules
+- simple public interface
+    - lexical scoping (private v public)
+
+Requirements:
+- simple API for creating an experiment
+- selected fitness functions to quickly modify experiments
+- achieve and return the chromosome with the highest fitness
+
+Definitions:
+- gene, a bit of information
+- chromosome, a vector of genes
+- locus, the position of the gene within its chromosome
+- population, a set of individuals containing chromosomes
+- mutation, a random change within a chromosome
+- crossover, an integerchange between two individual's chromosomes
+- fitness, the measure of the success of an individual
+- generation, a cycle with a population -> fitness calculating -> repopulation
+- genetic experiment, the parameters that define the evolution
+    - length of chromosomes
+    - number of chromosomes
+    - data for encoding chromosomes
+
+Fitness function:
+- a mock fitness function would just be the amount of 1 genes in a chromosome
+
+Crossover mechanics:
+- randomly pick a locus
+- swap one end of the locus with that of another individual
+
+Generation step:
+- cross over random pairs
+- mutate random individuals
+- sort the array
+- copy the upper half into the lower half
