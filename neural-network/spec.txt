@@ -1,0 +1,21 @@
+Goals:
+- reiterate modularity and cohesion with object libraries
+- practice the iterative design process on a larger project
+
+Requirements:
+- neural network library with adaptable shape
+- selected activation functions, etc.
+- hypertuning of learning rate, momentum factor, ...
+- supervised learning algorithm with backpropagation
+
+Definitions:
+- neuron: a pair of weight and bias numerics that transform an input to an output
+- activation-value: the most-recent output of a neuron
+- activation-function: the transformation of the dot-product of previous to its activation-value
+- momentum: a supervised learning technique to increase the convergence of neural networks
+    by remembering the previous shift, and having that influence the speed of the current delta w/b
+
+Array Library:
+- constructor (size)
+- indexing
+- get-size
