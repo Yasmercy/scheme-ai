@@ -37,11 +37,11 @@
         (append (cadr pop2) crossed)))
 
     ;; define a function to mutate the set of chromosomes a degree
-    (define (do-mutate chromosomes degree)
+    (define (do-mutate chromosomes degree generator)
       (let*
         ((pop-size (len chromosomes))
          (pop1 (pop chromosomes (rand-range 0 pop-size)))
-         (mutated (mutate-chromosome (car pop1) (degree (len (car pop1))))))
+         (mutated (mutate-chromosome (car pop1) (degree (len (car pop1))) generator)))
         (cons mutated (cadr pop1))))
 
     ;; defining a function to repopulate the population
@@ -55,6 +55,7 @@
 
     ;; create the new generation
     (let ((pop-size (index exper 2))
+          (generator (index exper 4))
           (fitness-func (index exper 5))
           (amount-cross (index exper 6))
           (amount-mutate (index exper 7))
@@ -63,7 +64,7 @@
       (let* ((functions
                (list
                  (lambda (chromosomes) (feed-forward chromosomes do-crossover (amount-cross pop-size)))
-                 (lambda (chromosomes) (feed-forward chromosomes (lambda (c) (do-mutate c degree-mutate)) (amount-mutate pop-size)))
+                 (lambda (chromosomes) (feed-forward chromosomes (lambda (c) (do-mutate c degree-mutate generator)) (amount-mutate pop-size)))
                  (lambda (chromosomes) (repopulate chromosomes fitness-func))))
              ;; chromosomes within the next generation
              (next-chromosomes (apply-all (index exper 0) functions)))

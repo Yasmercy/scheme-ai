@@ -10,11 +10,11 @@
                 (new-chromosome (- size 1) generator)))))
 
 ;; mutating a chromosome at ~n loci
-(define (mutate-chromosome chromosome n)
+(define (mutate-chromosome chromosome n generator)
   (let ((size (len chromosome)))
     ;; swaps the gene from 0->1 or 1->0
     (define (mutate-gene gene)
-      (if (= gene 0) 1 0))
+      (generator))
     ;; returns whether it should mutate
     (define (should-mutate)
       (occured n size))

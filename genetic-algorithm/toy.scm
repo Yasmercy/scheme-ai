@@ -7,6 +7,9 @@
   ;; this function can be implemented without branching
   (if (occured 1 3) 1 0))
 
+(define (random-generator-3)
+  (rand-range 0 3))
+
 ;; a fitness function
 ;; that just counts the amount of 1 alleles
 (define (count-one-fitness chromosome)
@@ -26,4 +29,5 @@
 ;; define a preset experiment using the above toy functions
 (load "lib.scm")
 (define x (create-genetic-experiment 100 100 one-third-generator count-one-fitness num-cross-magic num-mutate-magic degree-mutate-magic))
+(define y (create-genetic-experiment 100 100 random-generator-3 count-one-fitness num-cross-magic num-mutate-magic degree-mutate-magic))
 
