@@ -2,15 +2,15 @@
 (load "aux.scm")
 
 ;; creating a 2d matrix with row-length and col-length
-(define (make-matrix n m default)
+(define (make-matrix n m generator)
   ;; helper to create a 1d matrix of size
-  (define (make-1d size default)
+  (define (make-1d size generator)
     (cond ((= size 0) '())
-          (else (cons default (make-1d (- size 1) default)))))
+          (else (cons (generator) (make-1d (- size 1) generator)))))
 
   ;; concatenating n rows together
   (cond ((= n 0) '())
-        (else (cons (make-1d m default) (make-matrix (- n 1) m default)))))
+        (else (cons (make-1d m generator) (make-matrix (- n 1) m generator)))))
 
 ;; size geteters
 (define (num-rows matrix) (len matrix))
@@ -49,4 +49,27 @@
   ;; returning the transposed matrix
   (map rev (transpose-reversed (make-matrix (num-cols matrix) 0 '()) matrix)))
 
-(define (@ matrix1 matrix2) -1)
+;; method for matrix multiplication
+;; precondition: num-col(matrix1) = num-row(matrix2)
+(define (@ matrix1 matrix2)
+  ;; define dot products of two vectors
+  (define (dot-product arr1 arr2)
+    ;; precondition: len(arr1) = len(arr2)
+    (cond ((empty? arr1) 0)
+          (else (+ (* (car arr1) (car arr2)) (dot-product (cdr arr1) (cdr arr2))))))
+
+  ;; helper method
+  ;; takes in the current row of arr1
+  ;; and fills in the dot-products with each col of arr2 
+  ;; usage: matrix should be arr2.T
+  (define (fill-row vec matrix)
+    (cond ((empty? matrix) '())
+          (else (cons (dot-product vec (car matrix)) (fill-row vec (cdr matrix))))))
+
+  ;; do the matrix multiplication across each row with an accumulator
+  (define (do-mult m1 m2-transposed)
+    (cond ((empty? m1) '())
+          (else (cons (fill-row (car m1) m2-transposed) (do-mult (cdr m1) m2-transposed)))))
+
+  ;; return the output of the multiplication
+  (do-mult matrix1 (transpose matrix2)))
