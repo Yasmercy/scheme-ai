@@ -40,7 +40,7 @@
     (define (do-mutate chromosomes degree)
       (let*
         ((pop-size (len chromosomes))
-         (pop1 (pop chromosomes (rand-range p pop-size)))
+         (pop1 (pop chromosomes (rand-range 0 pop-size)))
          (mutated (mutate-chromosome (car pop1) (degree (len (car pop1))))))
         (cons mutated (cadr pop1))))
 
@@ -49,8 +49,9 @@
     (define (repopulate chromosomes fitness-func)
       (let* ((pop-size (len chromosomes))
              (middle (truncate (/ pop-size 2)))
-             (chroms (merge-sort chromosomes (lambda (a b) (>= (fitness-func a) (fitness-func b))))))
-        (append (drop chromos middle) (drop chromos middle))))
+             (chromos (merge-sort chromosomes (lambda (a b) (>= (fitness-func a) (fitness-func b))))))
+        ;; (bkpt (drop chromos middle))
+        (append (take chromos middle) (take chromos (- pop-size middle)))))
 
     ;; create the new generation
     (let ((pop-size (index exper 2))
@@ -67,11 +68,16 @@
              ;; chromosomes within the next generation
              (next-chromosomes (apply-all (index exper 0) functions)))
         ;; put together the next generation
-        (append (list next-chromosomes (+ generation 1)) (caddr exper)))))
+        ;; (bkpt next-chromosomes (cons (+ generation 1) (cddr exper)))
+        (append (list next-chromosomes) (cons (+ generation 1) (cddr exper))))))
 
   ;; feeding-forward the iterate n times
   ;; returning the elements in sorted fitness
-  (merge-sort (feed-forward experiment iterate n) (index experiment 5)))
+  (let* ((end (feed-forward experiment iterate n))
+         (fitness (index end 5))
+         (sorted-chromosomes (merge-sort (car end) (lambda (a b) (>= (fitness a) (fitness b))))))
+    (append (list sorted-chromosomes) (cdr end))))
+
 
 ;; get the highest fitness value of an experiment
 (define (most-fit experiment)

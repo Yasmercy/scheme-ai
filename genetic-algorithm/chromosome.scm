@@ -37,7 +37,7 @@
   (let ((h1 (take chromosome-1 locus))
         (l1 (drop chromosome-1 locus))
         (h2 (take chromosome-2 locus))
-        (l2 (take chromosome-2 locus)))
+        (l2 (drop chromosome-2 locus)))
     ;; return new pairs with h1-l2 and l2-l1
     (list 
       (append h1 l2)

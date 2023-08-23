@@ -18,12 +18,12 @@
   (truncate (/ population-size 5)))
 
 (define (num-mutate-magic population-size)
-  (truncate (/ population-size 10)))
+  (truncate (/ population-size 5)))
 
 (define (degree-mutate-magic chromosome-size)
   (truncate (/ chromosome-size 5)))
 
 ;; define a preset experiment using the above toy functions
 (load "lib.scm")
-(define x (create-genetic-experiment 100 10 one-third-generator count-one-fitness num-cross-magic num-mutate-magic degree-mutate-magic))
+(define x (create-genetic-experiment 100 100 one-third-generator count-one-fitness num-cross-magic num-mutate-magic degree-mutate-magic))
 
