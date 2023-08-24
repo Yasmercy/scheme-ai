@@ -12,7 +12,17 @@
   (cond ((= n 0) '())
         (else (cons (make-1d m generator) (make-matrix (- n 1) m generator)))))
 
-;; size geteters
+;; create a diagonal matrix from a linked list
+(define (make-diagonal arr)
+  (define (create-vector ele i n)
+    (append (repeat 0 i) (cons ele (repeat 0 (- n i 1))))) 
+  (define (helper arr i n)
+    (cond ((= i n) '())
+          (else (cons (create-vector (car arr) i n)
+                      (helper (cdr arr) (+ i 1) n)))))
+  (helper arr 0 (len arr)))
+
+;; size getters
 (define (num-rows matrix) (len matrix))
 (define (num-cols matrix) (len (car matrix))) ;; precondition: array is 2d
 
@@ -26,6 +36,14 @@
   
   ;; returning matrix[i][j]
   (index-1d (index-1d matrix i) j))
+  
+;; reversing all elements of the matrix
+(define (rev arr)
+  (define (rev-helper arr acc)
+    (cond ((empty? arr) acc)
+          (else (rev-helper (cdr arr) (cons (car arr) acc)))))
+  (rev-helper arr '()))
+
 
 ;; defining operations
 (define (transpose matrix)
@@ -38,13 +56,6 @@
     (cond ((empty? arr) acc)
           (else 
             (transpose-reversed (prepend-arr (car arr) acc) (cdr arr)))))
-
-  ;; reversing all elements of the matrix
-  (define (rev arr)
-    (define (rev-helper arr acc)
-      (cond ((empty? arr) acc)
-            (else (rev-helper (cdr arr) (cons (car arr) acc)))))
-    (rev-helper arr '()))
 
   ;; returning the transposed matrix
   (map rev (transpose-reversed (make-matrix (num-cols matrix) 0 '()) matrix)))
@@ -73,3 +84,9 @@
 
   ;; return the output of the multiplication
   (do-mult matrix1 (transpose matrix2)))
+
+(define (matrix-sub m1 m2)
+  (cond ((empty? m1) '())
+        (else
+          (cons (sub (car m1) (car m2))
+                (matrix-sub (cdr m1) (cdr m2))))))

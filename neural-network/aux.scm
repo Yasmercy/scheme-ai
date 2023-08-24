@@ -36,6 +36,10 @@
   (cond ((empty? (cdr arr)) (car arr))
         (else (last (cdr arr)))))
 
+;; vector subtraction of two arrays
+(define (sub arr1 arr2)
+  (map (lambda (x) (- (car x) (cadr x))) (zip arr1 arr2)))
+
 ;; general methods
 (define (len arr) 
   (cond ((empty? arr) 0)
