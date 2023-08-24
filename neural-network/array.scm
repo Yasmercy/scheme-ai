@@ -90,3 +90,9 @@
         (else
           (cons (sub (car m1) (car m2))
                 (matrix-sub (cdr m1) (cdr m2))))))
+
+(define (matrix-add m1 m2)
+  (cond ((empty? m1) '())
+        (else
+          (cons (add (car m1) (car m2))
+                (matrix-add (cdr m1) (cdr m2))))))

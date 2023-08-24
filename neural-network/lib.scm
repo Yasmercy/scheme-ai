@@ -55,7 +55,11 @@
     ;; propagate one layer at a time
     (define (prop w o e)
       ;; diagonal matrix of activations @ weight @ error
-      (@ (@ o (make-diagonal (map car w))) e))
+      ;; weight is always out x in
+      ;; error is always out x 1
+      ;; activations is always in x 1
+      ;; (in x in) (out x in)T (out x 1)
+      (@ (@ (make-diagonal (map car o)) (transpose w)) e))
 
     ;; return the array of arrays
     (cond ((empty? weights) (list prev-errors))
@@ -69,12 +73,15 @@
         (prev-errors (map list (sub expected (car (transpose outputs))))))
     (rev (prop-errors weights activations prev-errors))))
 
+;; given the errors and weights of the current neural network
+;; compute the gradient to change the weights by in next cycle
 (define (calculate-gradient weights errors)
   (cond ((empty? weights) '())
         (else 
           (cons (@ (make-diagonal (map car (car errors))) (car weights))
                     (calculate-gradient (cdr weights) (cdr errors))))))
 
+;; given the current neural network, return the updated one
 (define (iterate-network network inputs expected)
   (let* ((new-network (feed-forward network inputs))
          (outputs (get-last-output new-network))
@@ -86,7 +93,10 @@
       errors
       gradient)))
 
+;; trains the neural network on a training set of data
+;; with pairs of expected, input
+;; (supervised learning)
+(define (train-network starting-network training-set)
+  (cond ((empty? training-set) starting-network)
+        (else (train-network (iterate-network starting-network (cadar training-set) (caar training-set)) (cdr training-set)))))
 
-(define test (make-network 2 3 2 1 (lambda () 1)))
-(define y (feed-forward test '(1 2 3)))
-(define out (get-last-output y))

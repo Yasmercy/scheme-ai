@@ -40,6 +40,9 @@
 (define (sub arr1 arr2)
   (map (lambda (x) (- (car x) (cadr x))) (zip arr1 arr2)))
 
+(define (add arr1 arr2)
+  (map (lambda (x) (+ (car x) (cadr x))) (zip arr1 arr2)))
+
 ;; general methods
 (define (len arr) 
   (cond ((empty? arr) 0)
