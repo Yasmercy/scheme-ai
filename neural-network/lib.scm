@@ -69,18 +69,19 @@
         (prev-errors (map list (sub expected (car (transpose outputs))))))
     (rev (prop-errors weights activations prev-errors))))
 
-(define (calculate-gradient weights activations errors)
-  (cond ((empty? activations) '())
-        (else (cons (component-mult-m (car activations) (car errors))
-                    (calculate-gradient (cdr activations) (cdr errors))))))
+(define (calculate-gradient weights errors)
+  (cond ((empty? weights) '())
+        (else 
+          (cons (@ (make-diagonal (map car (car errors))) (car weights))
+                    (calculate-gradient (cdr weights) (cdr errors))))))
 
 (define (iterate-network network inputs expected)
   (let* ((new-network (feed-forward network inputs))
          (outputs (get-last-output new-network))
          (errors (back-propagation new-network outputs expected))
-         (gradient (calculate-gradient (get-activations new-network) errors)))
+         (gradient (calculate-gradient (get-weights new-network) (cdr errors))))
     (list
-      (matrix-sub (get-weights network) (map transpose gradient))
+      (map (lambda (a) (matrix-sub (car a) (cadr a))) (zip (get-weights network) gradient))
       (get-activations new-network)
       errors
       gradient)))
